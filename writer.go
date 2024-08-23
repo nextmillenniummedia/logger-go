@@ -15,7 +15,7 @@ func NewTestWriter() *TestWriter {
 }
 
 type TestWriter struct {
-	out string
+	out    string
 	reader io.Reader
 }
 

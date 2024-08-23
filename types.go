@@ -29,7 +29,7 @@ type ILogger interface {
 	SetWriter(w ILoggerWriter) ILogger
 }
 
-type ILoggerWriter io.Writer 
+type ILoggerWriter io.Writer
 
 var mapLevelName = map[Level]string{
 	LOG_VERBOSE: "verbose",

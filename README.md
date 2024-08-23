@@ -71,18 +71,3 @@ func SetToContext(ctx context.Context, logger ILogger) {...}
 func CloneFromContext(ctx context.Context, module string) ILogger {...}
 ```
 
-### Interface
-
-```go
-type ILogger interface {
-    Info(message string, params ...any) ILogger // ... and other level methods: verbose, debug, warn, error, fatal
-    // Setup level
-    Level(level Level) ILogger
-    // Clone logger with his settings
-    Clone() ILogger
-    // This params will added to all logs
-    ApplyParams(params ...any) ILogger
-    // Remove applied params from all logs 
-    RemoveParams(names ...string) ILogger
-}
-```

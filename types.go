@@ -1,5 +1,7 @@
 package main
 
+import "io"
+
 type Level int8
 type Params map[string]any
 
@@ -23,7 +25,11 @@ type ILogger interface {
 	ApplyParams(params ...any) ILogger
 	// Remove applied params from all logs
 	RemoveParams(names ...string) ILogger
+	// Set writer. By default is stdout
+	SetWriter(w ILoggerWriter) ILogger
 }
+
+type ILoggerWriter io.Writer 
 
 var mapLevelName = map[Level]string{
 	LOG_VERBOSE: "verbose",

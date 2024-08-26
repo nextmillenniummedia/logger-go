@@ -1,9 +1,11 @@
-package main
+package loggergo
 
-import "io"
+import (
+	"io"
+)
 
 type Level int8
-type Params map[string]any
+type Params map[string]string
 
 const (
 	LOG_VERBOSE Level = 10
@@ -22,14 +24,25 @@ type ILogger interface {
 	// Clone logger with his settings
 	Clone() ILogger
 	// This params will added to all logs
-	ApplyParams(params ...any) ILogger
+	ApplyParams(key string, value any) ILogger
 	// Remove applied params from all logs
 	RemoveParams(names ...string) ILogger
 	// Set writer. By default is stdout
-	SetWriter(w ILoggerWriter) ILogger
+	Writer(w IWriter) ILogger
+	// Set formatter. By default is json formatter
+	Formatter(f IFormatter) ILogger
+	// Set timer. By default is time
+	Timer(f ITimer) ILogger
 }
 
-type ILoggerWriter io.Writer
+type FormatParams map[string]string
+type IFormatter interface {
+	Format(params FormatParams) (result []byte, err error)
+}
+type ITimer interface {
+	Now() string
+}
+type IWriter io.Writer
 
 var mapLevelName = map[Level]string{
 	LOG_VERBOSE: "verbose",

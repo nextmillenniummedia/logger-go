@@ -1,4 +1,4 @@
-package main
+package loggergo
 
 import (
 	"io"
@@ -6,32 +6,32 @@ import (
 	"strings"
 )
 
-func NewStdoutWriter() ILoggerWriter {
+func NewWriterStdout() IWriter {
 	return os.Stdout
 }
 
-func NewTestWriter() *TestWriter {
-	return &TestWriter{}
+func NewWriterTest() *WriterTest {
+	return &WriterTest{}
 }
 
-type TestWriter struct {
+type WriterTest struct {
 	out    string
 	reader io.Reader
 }
 
-func (w *TestWriter) Write(p []byte) (n int, err error) {
+func (w *WriterTest) Write(p []byte) (n int, err error) {
 	w.out += string(p)
 	return len(p), nil
 }
 
-func (w *TestWriter) Read(p []byte) (n int, err error) {
+func (w *WriterTest) Read(p []byte) (n int, err error) {
 	if w.reader == nil {
 		w.reader = strings.NewReader(w.out)
 	}
 	return w.reader.Read(p)
 }
 
-func (w *TestWriter) ReadAll() string {
+func (w *WriterTest) ReadAll() string {
 	result, _ := io.ReadAll(w)
 	return string(result)
 }

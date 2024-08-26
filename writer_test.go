@@ -1,4 +1,4 @@
-package main
+package loggergo
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ import (
 func TestTestWriter(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	writer := NewTestWriter()
+	writer := NewWriterTest()
 	writer.Write([]byte("text"))
 	assert.Equal("text", writer.ReadAll())
 }

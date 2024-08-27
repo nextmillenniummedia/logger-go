@@ -1,6 +1,8 @@
 package loggergo
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func NewLogger() ILogger {
 	return &Logger{
@@ -94,7 +96,8 @@ func (l *Logger) log(level Level, message string, params ...any) ILogger {
 }
 
 func (l *Logger) makeParams(level Level, message string, params []any) FormatParams {
-	p := make(FormatParams, len(l.params)+len(params)/2)
+	lengthParams := len(l.params) + len(params) + 1
+	p := make(FormatParams, lengthParams)
 	p["level"] = fmt.Sprintf("%v", level)
 	p["message"] = message
 	p["time"] = l.timer.Now()

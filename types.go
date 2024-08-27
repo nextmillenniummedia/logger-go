@@ -34,6 +34,8 @@ type ILogger interface {
 	Level(level Level) ILogger
 	// Clone logger with his settings
 	Clone() ILogger
+	// Output is pretty format
+	Pretty() ILogger
 	// This params will added to all logs
 	Params(key string, value any) ILogger
 	// Remove applied params from all logs

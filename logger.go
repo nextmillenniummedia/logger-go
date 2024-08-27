@@ -42,6 +42,10 @@ func (l *Logger) Level(level Level) ILogger {
 	return l
 }
 
+func (l *Logger) Pretty() ILogger {
+	return l.Formatter(NewFormatterPretty()).Timer(NewTimerPretty())
+}
+
 func (l *Logger) Params(key string, value any) ILogger {
 	l.params[key] = fmt.Sprintf("%v", value)
 	return l

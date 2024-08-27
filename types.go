@@ -18,7 +18,18 @@ const (
 )
 
 type ILogger interface {
-	Info(message string, params ...any) ILogger // ... and other level methods: verbose, debug, warn, error, fatal
+	// Log with verbose level
+	Verbose(message string, params ...any) ILogger
+	// Log with debug level
+	Debug(message string, params ...any) ILogger
+	// Log with info level
+	Info(message string, params ...any) ILogger
+	// Log with warn level
+	Warn(message string, params ...any) ILogger
+	// Log with error level
+	Error(message string, params ...any) ILogger
+	// Log with fatal level
+	Fatal(message string, params ...any) ILogger
 	// Setup level
 	Level(level Level) ILogger
 	// Clone logger with his settings

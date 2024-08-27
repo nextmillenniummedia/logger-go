@@ -56,8 +56,28 @@ func (l *Logger) RemoveParams(names ...string) ILogger {
 	return l
 }
 
+func (l *Logger) Verbose(message string, params ...any) ILogger {
+	return l.log(LOG_VERBOSE, message, params...)
+}
+
+func (l *Logger) Debug(message string, params ...any) ILogger {
+	return l.log(LOG_DEBUG, message, params...)
+}
+
 func (l *Logger) Info(message string, params ...any) ILogger {
 	return l.log(LOG_INFO, message, params...)
+}
+
+func (l *Logger) Warn(message string, params ...any) ILogger {
+	return l.log(LOG_WARN, message, params...)
+}
+
+func (l *Logger) Error(message string, params ...any) ILogger {
+	return l.log(LOG_ERROR, message, params...)
+}
+
+func (l *Logger) Fatal(message string, params ...any) ILogger {
+	return l.log(LOG_FATAL, message, params...)
 }
 
 func (l *Logger) log(level Level, message string, params ...any) ILogger {

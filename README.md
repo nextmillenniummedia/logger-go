@@ -29,7 +29,7 @@ Logs with a level which is smaller than in the settings will be skipped
 ### Setup logger
 
 ```go
-logger := logging.NewLogger(...)
+logger := logging.NewLogger(...).
     Params("trace_id", traceId).
     Level(logLevel)
 ```

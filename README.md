@@ -30,7 +30,7 @@ Logs with a level which is smaller than in the settings will be skipped
 
 ```go
 logger := logging.NewLogger(...)
-    ApplyParams("trace_id", traceId).
+    Params("trace_id", traceId).
     Level(logLevel)
 ```
 

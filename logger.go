@@ -40,34 +40,54 @@ func (l *Logger) Clone() ILogger {
 }
 
 func (l *Logger) Level(level Level) ILogger {
-	panic("unimplemented")
+	l.level = level
+	return l
 }
 
-func (l *Logger) ApplyParams(key string, value any) ILogger {
-	l.params[key] = fmt.Sprintf("%s", value)
+func (l *Logger) Params(key string, value any) ILogger {
+	l.params[key] = fmt.Sprintf("%v", value)
 	return l
 }
 
 func (l *Logger) RemoveParams(names ...string) ILogger {
-	panic("unimplemented")
-}
-
-func (l *Logger) Info(message string, params ...any) ILogger {
-	l.log(LOG_INFO, message, params...)
+	for _, name := range names {
+		delete(l.params, name)
+	}
 	return l
 }
 
+func (l *Logger) Info(message string, params ...any) ILogger {
+	return l.log(LOG_INFO, message, params...)
+}
+
 func (l *Logger) log(level Level, message string, params ...any) ILogger {
-	p := make(FormatParams, len(l.params)+len(params)/2)
-	p["message"] = message
-	p["time"] = l.timer.Now()
-	for key, value := range l.params {
-		p[key] = value
+	if l.level > level {
+		return l
 	}
-	result, err := l.formatter.Format(p)
+	paramsFinal := l.makeParams(level, message, params)
+	result, err := l.formatter.Format(paramsFinal)
 	if err != nil {
 		panic(err)
 	}
 	l.writer.Write(result)
 	return l
+}
+
+func (l *Logger) makeParams(level Level, message string, params []any) FormatParams {
+	p := make(FormatParams, len(l.params)+len(params)/2)
+	p["level"] = fmt.Sprintf("%v", level)
+	p["message"] = message
+	p["time"] = l.timer.Now()
+	for key, value := range l.params {
+		p[key] = value
+	}
+	for _, chunk := range chunkBy(params, 2) {
+		if len(chunk) != 2 {
+			continue
+		}
+		key := fmt.Sprintf("%s", chunk[0])
+		value := fmt.Sprintf("%v", chunk[1])
+		p[key] = value
+	}
+	return p
 }

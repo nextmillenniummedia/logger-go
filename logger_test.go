@@ -6,16 +6,61 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var now = "now time"
+var now = "now"
 
-func TestLoggerInfo(t *testing.T) {
+func TestLoggerLevelSmaller(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
 	writer := NewWriterTest()
 	timer := NewTimerTest(now)
 	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_VERBOSE)
-	logger.ApplyParams("param1", "value1")
-	logger.Info("Test message", "param1", "value1")
-	expect := `{"message":"Test message","param1":"value1","time":"now time"}`
+	logger.Info("Test")
+	expect := `{"level":"30","message":"Test","time":"now"}`
+	assert.Equal(expect, writer.ReadAll())
+}
+
+func TestLoggerLevelMore(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	writer := NewWriterTest()
+	logger := NewLogger().Writer(writer).Level(LOG_SILENT)
+	logger.Info("Test")
+	expect := ``
+	assert.Equal(expect, writer.ReadAll())
+}
+
+func TestLoggerLevelEqual(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	writer := NewWriterTest()
+	timer := NewTimerTest(now)
+	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
+	logger.Info("Test")
+	expect := `{"level":"30","message":"Test","time":"now"}`
+	assert.Equal(expect, writer.ReadAll())
+}
+
+func TestLoggerParams(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	writer := NewWriterTest()
+	timer := NewTimerTest(now)
+	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
+	logger.Params("file", "any.go")
+	logger.Info("Order created", "order_id", 12)
+	expect := `{"file":"any.go","level":"30","message":"Order created","order_id":"12","time":"now"}`
+	assert.Equal(expect, writer.ReadAll())
+}
+
+func TestLoggerRemoveParams(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	writer := NewWriterTest()
+	timer := NewTimerTest(now)
+	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
+	logger.Params("file", "any.go").Params("user_id", 1).Params("company_id", 2)
+	logger.RemoveParams("file", "user_id")
+	logger.Info("Test")
+	expect := `{"company_id":"2","level":"30","message":"Test","time":"now"}`
 	assert.Equal(expect, writer.ReadAll())
 }

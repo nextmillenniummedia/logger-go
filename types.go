@@ -24,7 +24,7 @@ type ILogger interface {
 	// Clone logger with his settings
 	Clone() ILogger
 	// This params will added to all logs
-	ApplyParams(key string, value any) ILogger
+	Params(key string, value any) ILogger
 	// Remove applied params from all logs
 	RemoveParams(names ...string) ILogger
 	// Set writer. By default is stdout

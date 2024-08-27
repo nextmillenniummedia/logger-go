@@ -37,10 +37,6 @@ func (l *Logger) Timer(t ITimer) ILogger {
 	return l
 }
 
-func (l *Logger) Clone() ILogger {
-	panic("unimplemented")
-}
-
 func (l *Logger) Level(level Level) ILogger {
 	l.level = level
 	return l
@@ -56,6 +52,16 @@ func (l *Logger) RemoveParams(names ...string) ILogger {
 		delete(l.params, name)
 	}
 	return l
+}
+
+func (l *Logger) Clone() ILogger {
+	return &Logger{
+		level:     l.level,
+		params:    cloneMap(l.params),
+		formatter: l.formatter.Clone(),
+		writer:    l.writer.Clone(),
+		timer:     l.timer.Clone(),
+	}
 }
 
 func (l *Logger) Verbose(message string, params ...any) ILogger {

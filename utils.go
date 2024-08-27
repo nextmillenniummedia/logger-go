@@ -12,3 +12,11 @@ func chunkBy[T any](items []T, chunkSize int) (chunks [][]T) {
 	}
 	return append(chunks, items)
 }
+
+func cloneMap(original Params) Params {
+	cloned := make(Params, len(original))
+	for key, value := range original {
+		cloned[key] = value
+	}
+	return cloned
+}

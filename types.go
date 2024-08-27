@@ -49,11 +49,16 @@ type ILogger interface {
 type FormatParams map[string]string
 type IFormatter interface {
 	Format(params FormatParams) (result []byte, err error)
+	Clone() IFormatter
 }
 type ITimer interface {
 	Now() string
+	Clone() ITimer
 }
-type IWriter io.Writer
+type IWriter interface {
+	io.Writer
+	Clone() IWriter
+}
 
 var mapLevelName = map[Level]string{
 	LOG_VERBOSE: "verbose",

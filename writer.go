@@ -7,7 +7,17 @@ import (
 )
 
 func NewWriterStdout() IWriter {
-	return os.Stdout
+	return &WriterStdout{}
+}
+
+type WriterStdout struct{}
+
+func (w *WriterStdout) Write(p []byte) (n int, err error) {
+	return os.Stdout.Write(p)
+}
+
+func (w *WriterStdout) Clone() IWriter {
+	return w
 }
 
 func NewWriterTest() *WriterTest {
@@ -22,6 +32,10 @@ type WriterTest struct {
 func (w *WriterTest) Write(p []byte) (n int, err error) {
 	w.out += string(p)
 	return len(p), nil
+}
+
+func (w *WriterTest) Clone() IWriter {
+	return &WriterTest{}
 }
 
 func (w *WriterTest) Read(p []byte) (n int, err error) {

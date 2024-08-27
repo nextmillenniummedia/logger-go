@@ -3,12 +3,16 @@ package loggergo
 import "encoding/json"
 
 func NewFormatterJson() IFormatter {
-	return &JsonFormatter{}
+	return &FormatterJson{}
 }
 
-type JsonFormatter struct {
+type FormatterJson struct {
 }
 
-func (f *JsonFormatter) Format(params FormatParams) (result []byte, er error) {
+func (f *FormatterJson) Format(params FormatParams) (result []byte, er error) {
 	return json.Marshal(params)
+}
+
+func (f *FormatterJson) Clone() IFormatter {
+	return &FormatterJson{}
 }

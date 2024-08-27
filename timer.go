@@ -12,14 +12,22 @@ func (t *Timer) Now() string {
 	return time.Now().Format(time.RFC3339)
 }
 
-func NewTimerTest(time string) ITimer {
-	return &TestTimer{time: time}
+func (t *Timer) Clone() ITimer {
+	return &Timer{}
 }
 
-type TestTimer struct {
+func NewTimerTest(time string) ITimer {
+	return &TimerTest{time: time}
+}
+
+type TimerTest struct {
 	time string
 }
 
-func (t *TestTimer) Now() string {
+func (t *TimerTest) Now() string {
 	return t.time
+}
+
+func (t *TimerTest) Clone() ITimer {
+	return &TimerTest{time: t.time}
 }

@@ -119,12 +119,12 @@ func (l *Logger) makeParams(level Level, message string, params []any) FormatPar
 		p[key] = value
 	}
 	for _, chunk := range chunkBy(params, 2) {
-		if len(chunk) != 2 {
-			continue
-		}
 		key := fmt.Sprintf("%s", chunk[0])
-		value := chunk[1]
-		p[key] = value
+		if len(chunk) == 2 {
+			p[key] = chunk[1]
+		} else {
+			p[key] = "-"
+		}
 	}
 	return p
 }

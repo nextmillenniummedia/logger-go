@@ -52,6 +52,18 @@ func TestLoggerParams(t *testing.T) {
 	assert.Equal(expect, writer.ReadAll())
 }
 
+func TestLoggerParamsWithoutValue(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	writer := NewWriterTest()
+	timer := NewTimerTest(now)
+	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
+	logger.Params("file", "any.go")
+	logger.Info("Order created", "order_id")
+	expect := `{"file":"any.go","level":30,"message":"Order created","order_id":"-","time":"now"}` + "\n"
+	assert.Equal(expect, writer.ReadAll())
+}
+
 func TestLoggerRemoveParams(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()

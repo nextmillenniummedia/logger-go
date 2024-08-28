@@ -5,16 +5,16 @@ import (
 	"strings"
 )
 
-var PARAM_RESERVED_NAMES = []string{"level", "message", "time", "from"}
-var PARAM_PREFIX = "    "
+var param_reserved_names = []string{"level", "message", "time", "from"}
+var parma_prefix = "    "
 
-func NewFormatterPretty() IFormatter {
-	return &FormatterPretty{}
+func newFormatterPretty() IFormatter {
+	return &formatterPretty{}
 }
 
-type FormatterPretty struct{}
+type formatterPretty struct{}
 
-func (f *FormatterPretty) Format(params FormatParams) (result []byte, err error) {
+func (f *formatterPretty) Format(params FormatParams) (result []byte, err error) {
 	levelHuman, err := getLevelHuman(params["level"])
 	if err != nil {
 		return nil, err
@@ -33,16 +33,16 @@ func (f *FormatterPretty) Format(params FormatParams) (result []byte, err error)
 		lines[i] = fmt.Sprintf("%s %s %s", params["time"], levelHuman, message)
 	}
 	for key, value := range params {
-		if Contains(PARAM_RESERVED_NAMES, key) {
+		if contains(param_reserved_names, key) {
 			continue
 		}
 		i++
-		lines[i] = fmt.Sprintf("%s%s: %+v", PARAM_PREFIX, key, value)
+		lines[i] = fmt.Sprintf("%s%s: %+v", parma_prefix, key, value)
 	}
 	result = []byte(joinString(lines, "\n") + "\n")
 	return result, nil
 }
 
-func (f *FormatterPretty) Clone() IFormatter {
-	return &FormatterPretty{}
+func (f *formatterPretty) Clone() IFormatter {
+	return &formatterPretty{}
 }

@@ -39,8 +39,8 @@ func TestContains(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
 	list := []int{1, 2}
-	assert.Equal(true, Contains(list, 2))
-	assert.Equal(false, Contains(list, 4))
+	assert.Equal(true, contains(list, 2))
+	assert.Equal(false, contains(list, 4))
 }
 
 func TestJoinStrings(t *testing.T) {

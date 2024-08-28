@@ -5,14 +5,14 @@ import (
 	"fmt"
 )
 
-func NewFormatterJson() IFormatter {
-	return &FormatterJson{}
+func newFormatterJson() IFormatter {
+	return &formatterJson{}
 }
 
-type FormatterJson struct {
+type formatterJson struct {
 }
 
-func (f *FormatterJson) Format(params FormatParams) (result []byte, err error) {
+func (f *formatterJson) Format(params FormatParams) (result []byte, err error) {
 	formatted, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
@@ -20,6 +20,6 @@ func (f *FormatterJson) Format(params FormatParams) (result []byte, err error) {
 	return []byte(fmt.Sprintf("%s\n", string(formatted))), nil
 }
 
-func (f *FormatterJson) Clone() IFormatter {
-	return &FormatterJson{}
+func (f *formatterJson) Clone() IFormatter {
+	return &formatterJson{}
 }

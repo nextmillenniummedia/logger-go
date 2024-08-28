@@ -2,32 +2,32 @@ package loggergo
 
 import "time"
 
-func NewTimer() ITimer {
-	return &Timer{}
+func newTimer() ITimer {
+	return &timer{}
 }
 
-type Timer struct{}
+type timer struct{}
 
-func (t *Timer) Now() string {
+func (t *timer) Now() string {
 	return time.Now().Format(time.RFC3339)
 }
 
-func (t *Timer) Clone() ITimer {
-	return &Timer{}
+func (t *timer) Clone() ITimer {
+	return &timer{}
 }
 
 func NewTimerPretty() ITimer {
-	return &TimerPretty{}
+	return &timerPretty{}
 }
 
-type TimerPretty struct{}
+type timerPretty struct{}
 
-func (t *TimerPretty) Now() string {
+func (t *timerPretty) Now() string {
 	return time.Now().Format(time.TimeOnly)
 }
 
-func (t *TimerPretty) Clone() ITimer {
-	return &TimerPretty{}
+func (t *timerPretty) Clone() ITimer {
+	return &timerPretty{}
 }
 
 func newTimerTest(time string) ITimer {

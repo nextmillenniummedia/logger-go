@@ -1,13 +1,10 @@
 package loggergo
 
 import (
-	"fmt"
 	"io"
-	"strconv"
 )
 
 type Level int8
-type Params map[string]string
 
 const (
 	LOG_VERBOSE Level = 10
@@ -66,26 +63,4 @@ type IWriter interface {
 	Clone() IWriter
 }
 
-var level_human_max_length = 7
-
-var mapLevelName = map[Level]string{
-	LOG_VERBOSE: "verbose",
-	LOG_DEBUG:   "debug",
-	LOG_INFO:    "info",
-	LOG_WARN:    "warn",
-	LOG_ERROR:   "error",
-	LOG_FATAL:   "fatal",
-	LOG_SILENT:  "silent",
-}
-
-func getLevelHuman(level any) (human string, err error) {
-	levelNum, err := strconv.Atoi(fmt.Sprintf("%v", level))
-	if err != nil {
-		return "", err
-	}
-	human, has := mapLevelName[Level(levelNum)]
-	if !has {
-		return "", ErrorLevelHumanNotFound
-	}
-	return human, nil
-}
+type logParams map[string]string

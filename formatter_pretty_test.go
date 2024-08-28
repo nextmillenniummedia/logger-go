@@ -9,7 +9,7 @@ import (
 func TestFormatterPretty(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	formatter := NewFormatterPretty()
+	formatter := newFormatterPretty()
 	params := FormatParams{
 		"time":    "09:02:12",
 		"level":   30,
@@ -26,7 +26,7 @@ func TestFormatterPretty(t *testing.T) {
 func TestFormatterLevelHumanVerbose(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	formatter := NewFormatterPretty()
+	formatter := newFormatterPretty()
 	params := FormatParams{
 		"time":    "09:02:12",
 		"level":   10,
@@ -41,7 +41,7 @@ func TestFormatterLevelHumanVerbose(t *testing.T) {
 func TestFormatterFrom(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	formatter := NewFormatterPretty()
+	formatter := newFormatterPretty()
 	params := FormatParams{
 		"time":    "09:02:12",
 		"level":   10,
@@ -63,7 +63,7 @@ func TestFormatterStruct(t *testing.T) {
 	}
 	s := Struct{Name: "Eugen", Age: 18}
 	m := map[string]any{"a": 123, "b": "text"}
-	formatter := NewFormatterPretty()
+	formatter := newFormatterPretty()
 	params := FormatParams{
 		"time":    "09:02:12",
 		"level":   30,

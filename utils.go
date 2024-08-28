@@ -1,6 +1,9 @@
 package loggergo
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func chunkBy[T any](items []T, chunkSize int) (chunks [][]T) {
 	if chunkSize == 0 {
@@ -15,15 +18,15 @@ func chunkBy[T any](items []T, chunkSize int) (chunks [][]T) {
 	return append(chunks, items)
 }
 
-func cloneMap(original Params) Params {
-	cloned := make(Params, len(original))
+func cloneMap(original logParams) logParams {
+	cloned := make(logParams, len(original))
 	for key, value := range original {
 		cloned[key] = value
 	}
 	return cloned
 }
 
-func Contains[T comparable](s []T, e T) bool {
+func contains[T comparable](s []T, e T) bool {
 	for _, a := range s {
 		if a == e {
 			return true
@@ -60,4 +63,27 @@ func suffixToLength(text, suffix string, length int) string {
 		result += suffix
 	}
 	return result
+}
+
+var level_human_max_length = 7
+var mapLevelName = map[Level]string{
+	LOG_VERBOSE: "verbose",
+	LOG_DEBUG:   "debug",
+	LOG_INFO:    "info",
+	LOG_WARN:    "warn",
+	LOG_ERROR:   "error",
+	LOG_FATAL:   "fatal",
+	LOG_SILENT:  "silent",
+}
+
+func getLevelHuman(level any) (human string, err error) {
+	levelNum, err := strconv.Atoi(fmt.Sprintf("%v", level))
+	if err != nil {
+		return "", err
+	}
+	human, has := mapLevelName[Level(levelNum)]
+	if !has {
+		return "", ErrorLevelHumanNotFound
+	}
+	return human, nil
 }

@@ -4,66 +4,66 @@ import (
 	"fmt"
 )
 
-func NewLogger() ILogger {
-	return &Logger{
+func New() ILogger {
+	return &logger{
 		level:     LOG_ERROR,
-		params:    make(Params),
+		params:    make(logParams),
 		writer:    newWriterStdout(),
-		formatter: NewFormatterJson(),
-		timer:     NewTimer(),
+		formatter: newFormatterJson(),
+		timer:     newTimer(),
 	}
 }
 
-type Logger struct {
+type logger struct {
 	level     Level
-	params    Params
+	params    logParams
 	formatter IFormatter
 	writer    IWriter
 	timer     ITimer
 }
 
-func (l *Logger) Writer(w IWriter) ILogger {
+func (l *logger) Writer(w IWriter) ILogger {
 	l.writer = w
 	return l
 }
 
-func (l *Logger) Formatter(f IFormatter) ILogger {
+func (l *logger) Formatter(f IFormatter) ILogger {
 	l.formatter = f
 	return l
 }
 
-func (l *Logger) Timer(t ITimer) ILogger {
+func (l *logger) Timer(t ITimer) ILogger {
 	l.timer = t
 	return l
 }
 
-func (l *Logger) Level(level Level) ILogger {
+func (l *logger) Level(level Level) ILogger {
 	l.level = level
 	return l
 }
 
-func (l *Logger) From(from string) ILogger {
+func (l *logger) From(from string) ILogger {
 	return l.Params("from", from)
 }
 
-func (l *Logger) Pretty() ILogger {
-	return l.Formatter(NewFormatterPretty()).Timer(NewTimerPretty())
+func (l *logger) Pretty() ILogger {
+	return l.Formatter(newFormatterPretty()).Timer(NewTimerPretty())
 }
 
-func (l *Logger) Params(key string, value any) ILogger {
+func (l *logger) Params(key string, value any) ILogger {
 	l.params[key] = fmt.Sprintf("%v", value)
 	return l
 }
 
-func (l *Logger) RemoveParams(names ...string) ILogger {
+func (l *logger) RemoveParams(names ...string) ILogger {
 	for _, name := range names {
 		delete(l.params, name)
 	}
 	return l
 }
 
-func (l *Logger) Clone() ILogger {
-	return &Logger{
+func (l *logger) Clone() ILogger {
+	return &logger{
 		level:     l.level,
 		params:    cloneMap(l.params),
 		formatter: l.formatter.Clone(),
@@ -72,31 +72,31 @@ func (l *Logger) Clone() ILogger {
 	}
 }
 
-func (l *Logger) Verbose(message string, params ...any) ILogger {
+func (l *logger) Verbose(message string, params ...any) ILogger {
 	return l.log(LOG_VERBOSE, message, params...)
 }
 
-func (l *Logger) Debug(message string, params ...any) ILogger {
+func (l *logger) Debug(message string, params ...any) ILogger {
 	return l.log(LOG_DEBUG, message, params...)
 }
 
-func (l *Logger) Info(message string, params ...any) ILogger {
+func (l *logger) Info(message string, params ...any) ILogger {
 	return l.log(LOG_INFO, message, params...)
 }
 
-func (l *Logger) Warn(message string, params ...any) ILogger {
+func (l *logger) Warn(message string, params ...any) ILogger {
 	return l.log(LOG_WARN, message, params...)
 }
 
-func (l *Logger) Error(message string, params ...any) ILogger {
+func (l *logger) Error(message string, params ...any) ILogger {
 	return l.log(LOG_ERROR, message, params...)
 }
 
-func (l *Logger) Fatal(message string, params ...any) ILogger {
+func (l *logger) Fatal(message string, params ...any) ILogger {
 	return l.log(LOG_FATAL, message, params...)
 }
 
-func (l *Logger) log(level Level, message string, params ...any) ILogger {
+func (l *logger) log(level Level, message string, params ...any) ILogger {
 	if l.level > level {
 		return l
 	}
@@ -109,7 +109,7 @@ func (l *Logger) log(level Level, message string, params ...any) ILogger {
 	return l
 }
 
-func (l *Logger) makeParams(level Level, message string, params []any) FormatParams {
+func (l *logger) makeParams(level Level, message string, params []any) FormatParams {
 	lengthParams := len(l.params) + len(params) + 1
 	p := make(FormatParams, lengthParams)
 	p["level"] = level

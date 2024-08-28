@@ -10,7 +10,7 @@ go get github.com/nextmillenniummedia/logger-go
 
 Init main logger:
 ```go
-logger := loggergo.NewLogger().
+logger := loggergo.New().
     Params("trace_id", traceId).
     Level(loggergo.LOG_INFO).
 ```
@@ -55,7 +55,7 @@ Stdout:
 Log message with level lower than set will be skipped
 
 ```go
-logger := loggergo.NewLogger().Level(loggergo.LEVEL_ERROR)
+logger := loggergo.New().Level(loggergo.LEVEL_ERROR)
 logger.Error("Error message")
 logger.Info("info message") // Will be skipped
 ```

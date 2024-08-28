@@ -6,46 +6,46 @@ import (
 	"strings"
 )
 
-func NewWriterStdout() IWriter {
-	return &WriterStdout{}
+func newWriterStdout() IWriter {
+	return &writerStdout{}
 }
 
-type WriterStdout struct{}
+type writerStdout struct{}
 
-func (w *WriterStdout) Write(p []byte) (n int, err error) {
+func (w *writerStdout) Write(p []byte) (n int, err error) {
 	return os.Stdout.Write(p)
 }
 
-func (w *WriterStdout) Clone() IWriter {
+func (w *writerStdout) Clone() IWriter {
 	return w
 }
 
-func NewWriterTest() *WriterTest {
-	return &WriterTest{}
+func newWriterTest() *writerTest {
+	return &writerTest{}
 }
 
-type WriterTest struct {
+type writerTest struct {
 	out    string
 	reader io.Reader
 }
 
-func (w *WriterTest) Write(p []byte) (n int, err error) {
+func (w *writerTest) Write(p []byte) (n int, err error) {
 	w.out += string(p)
 	return len(p), nil
 }
 
-func (w *WriterTest) Clone() IWriter {
-	return &WriterTest{}
+func (w *writerTest) Clone() IWriter {
+	return &writerTest{}
 }
 
-func (w *WriterTest) Read(p []byte) (n int, err error) {
+func (w *writerTest) Read(p []byte) (n int, err error) {
 	if w.reader == nil {
 		w.reader = strings.NewReader(w.out)
 	}
 	return w.reader.Read(p)
 }
 
-func (w *WriterTest) ReadAll() string {
+func (w *writerTest) ReadAll() string {
 	result, _ := io.ReadAll(w)
 	return string(result)
 }

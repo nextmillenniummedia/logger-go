@@ -47,13 +47,13 @@ func TestJoinStrings(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
 	list := []string{"1", "2", "3"}
-	assert.Equal("1-2-3", JoinString(list, "-"))
+	assert.Equal("1-2-3", joinString(list, "-"))
 	list = []string{"1"}
-	assert.Equal("1", JoinString(list, "-"))
+	assert.Equal("1", joinString(list, "-"))
 	list = []string{}
-	assert.Equal("", JoinString(list, "-"))
+	assert.Equal("", joinString(list, "-"))
 	list = []string{"1", "", "3"}
-	assert.Equal("1-3", JoinString(list, "-"))
+	assert.Equal("1-3", joinString(list, "-"))
 }
 
 func TestSuffixToLength(t *testing.T) {

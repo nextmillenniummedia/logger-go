@@ -8,7 +8,7 @@ func NewLogger() ILogger {
 	return &Logger{
 		level:     LOG_ERROR,
 		params:    make(Params),
-		writer:    NewWriterStdout(),
+		writer:    newWriterStdout(),
 		formatter: NewFormatterJson(),
 		timer:     NewTimer(),
 	}

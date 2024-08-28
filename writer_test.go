@@ -9,7 +9,7 @@ import (
 func TestTestWriter(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	writer := NewWriterTest()
+	writer := newWriterTest()
 	writer.Write([]byte("text"))
 	assert.Equal("text", writer.ReadAll())
 }

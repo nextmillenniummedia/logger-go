@@ -30,18 +30,18 @@ func (t *TimerPretty) Clone() ITimer {
 	return &TimerPretty{}
 }
 
-func NewTimerTest(time string) ITimer {
-	return &TimerTest{time: time}
+func newTimerTest(time string) ITimer {
+	return &timerTest{time: time}
 }
 
-type TimerTest struct {
+type timerTest struct {
 	time string
 }
 
-func (t *TimerTest) Now() string {
+func (t *timerTest) Now() string {
 	return t.time
 }
 
-func (t *TimerTest) Clone() ITimer {
-	return &TimerTest{time: t.time}
+func (t *timerTest) Clone() ITimer {
+	return &timerTest{time: t.time}
 }

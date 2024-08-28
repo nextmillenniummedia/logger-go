@@ -32,7 +32,7 @@ func Contains[T comparable](s []T, e T) bool {
 	return false
 }
 
-func JoinString(items []string, delim string) string {
+func joinString(items []string, delim string) string {
 	if len(items) == 0 {
 		return ""
 	}

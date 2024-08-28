@@ -39,7 +39,7 @@ func (f *FormatterPretty) Format(params FormatParams) (result []byte, err error)
 		i++
 		lines[i] = fmt.Sprintf("%s%s: %+v", PARAM_PREFIX, key, value)
 	}
-	result = []byte(JoinString(lines, "\n") + "\n")
+	result = []byte(joinString(lines, "\n") + "\n")
 	return result, nil
 }
 

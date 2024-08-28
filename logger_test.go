@@ -11,8 +11,8 @@ var now = "now"
 func TestLoggerLevelSmaller(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	writer := NewWriterTest()
-	timer := NewTimerTest(now)
+	writer := newWriterTest()
+	timer := newTimerTest(now)
 	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_VERBOSE)
 	logger.Info("Test")
 	expect := `{"level":30,"message":"Test","time":"now"}` + "\n"
@@ -22,7 +22,7 @@ func TestLoggerLevelSmaller(t *testing.T) {
 func TestLoggerLevelMore(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	writer := NewWriterTest()
+	writer := newWriterTest()
 	logger := NewLogger().Writer(writer).Level(LOG_SILENT)
 	logger.Info("Test")
 	expect := ``
@@ -32,8 +32,8 @@ func TestLoggerLevelMore(t *testing.T) {
 func TestLoggerLevelEqual(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	writer := NewWriterTest()
-	timer := NewTimerTest(now)
+	writer := newWriterTest()
+	timer := newTimerTest(now)
 	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
 	logger.Info("Test")
 	expect := `{"level":30,"message":"Test","time":"now"}` + "\n"
@@ -43,8 +43,8 @@ func TestLoggerLevelEqual(t *testing.T) {
 func TestLoggerParams(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	writer := NewWriterTest()
-	timer := NewTimerTest(now)
+	writer := newWriterTest()
+	timer := newTimerTest(now)
 	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
 	logger.Params("file", "any.go")
 	logger.Info("Order created", "order_id", 12)
@@ -55,8 +55,8 @@ func TestLoggerParams(t *testing.T) {
 func TestLoggerParamsWithoutValue(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	writer := NewWriterTest()
-	timer := NewTimerTest(now)
+	writer := newWriterTest()
+	timer := newTimerTest(now)
 	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
 	logger.Params("file", "any.go")
 	logger.Info("Order created", "order_id")
@@ -67,8 +67,8 @@ func TestLoggerParamsWithoutValue(t *testing.T) {
 func TestLoggerRemoveParams(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
-	writer := NewWriterTest()
-	timer := NewTimerTest(now)
+	writer := newWriterTest()
+	timer := newTimerTest(now)
 	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
 	logger.Params("file", "any.go").Params("user_id", 1).Params("company_id", 2)
 	logger.RemoveParams("file", "user_id")

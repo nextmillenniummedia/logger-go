@@ -42,6 +42,10 @@ func (l *Logger) Level(level Level) ILogger {
 	return l
 }
 
+func (l *Logger) From(from string) ILogger {
+	return l.Params("from", from)
+}
+
 func (l *Logger) Pretty() ILogger {
 	return l.Formatter(NewFormatterPretty()).Timer(NewTimerPretty())
 }

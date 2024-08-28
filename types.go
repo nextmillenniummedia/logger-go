@@ -32,6 +32,8 @@ type ILogger interface {
 	Fatal(message string, params ...any) ILogger
 	// Setup level
 	Level(level Level) ILogger
+	// Logs were sent from
+	From(from string) ILogger
 	// Clone logger with his settings
 	Clone() ILogger
 	// Output is pretty format

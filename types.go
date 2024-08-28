@@ -49,7 +49,6 @@ type ILogger interface {
 	Timer(f ITimer) ILogger
 }
 
-type FormatParams map[string]any
 type IFormatter interface {
 	Format(params FormatParams) (result []byte, err error)
 	Clone() IFormatter
@@ -63,4 +62,5 @@ type IWriter interface {
 	Clone() IWriter
 }
 
+type FormatParams map[string]any
 type logParams map[string]string

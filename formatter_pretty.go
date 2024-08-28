@@ -38,5 +38,5 @@ func (f *FormatterPretty) Format(params FormatParams) (result []byte, err error)
 }
 
 func (f *FormatterPretty) Clone() IFormatter {
-	return &FormatterJson{}
+	return &FormatterPretty{}
 }

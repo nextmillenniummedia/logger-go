@@ -1,20 +1,49 @@
 # Logger for go
 
-### Format
+### Install
 
-Use `json` because it is easy to parse on the logging system side
+```bash
+go get github.com/nextmillenniummedia/logger-go
+```
+
+### Init
+
+Init main logger:
+```go
+logger := loggergo.NewLogger().
+    Params("trace_id", traceId).
+    Level(loggergo.LOG_INFO).
+```
+
+Cloning the logger for child processes while preserving settings:
+```go
+logger = logger.Clone().From("Another service")
+```
+
+### Example
 
 Example: in `json` format
+```go
+logger.Params("trace_id", trace_id).From("Service name")
+logger.Info("You message", "param1": "value1")
 ```
-{"level": 1, "module": "predictor", "message": "Call predict response", "trace_id": "xxx-xxx-xxx", "param1": "value1", "param2": "value2"}
+Stdout:
+```
+{"level": 30, "from": "Service name", "message": "You message", "trace_id": "xxx-xxx-xxx", "param1": "value1"}
 ```
 
-Example: for local development in pretty mode
+Example: for local development in `pretty` mode
+```go
+logger.Params("trace_id", trace_id).From("Service name")
+logger.Pretty() // Enable pretty mode
+logger.Info("You message")
 ```
-12:31:33.988 [INFO] [predictor] Call predict response 
-    trace_id xxx-xxx-xxx
-    param1 value1
-    param2 value2
+Stdout:
+```
+12:31:33.988 [INFO]    [Service name] You message
+    trace_id: xxx-xxx-xxx
+    param1: value1
+    param2: value2
 ```
 
 ### Levels with codes
@@ -23,51 +52,10 @@ Example: for local development in pretty mode
 |--------|---------|-------|------|------|-------|-------|----------|
 | Value: | 10      | 20    | 30   | 40   | 50    | 60    | 100      |
 
-Logs with a level which is smaller than in the settings will be skipped
-
-
-### Setup logger
+Log message with level lower than set will be skipped
 
 ```go
-logger := logging.NewLogger(...).
-    Params("trace_id", traceId).
-    Level(logLevel)
+logger := loggergo.NewLogger().Level(loggergo.LEVEL_ERROR)
+logger.Error("Error message")
+logger.Info("info message") // Will be skipped
 ```
-
-
-### Example of usage
-
-In structure
-```go
-func NewService(ctx context.Context, ...) *IService {
-    logger := logging.CloneFromContext(ctx, "service_name")
-    return &Service{
-        logger: logger 
-    }
-}
-
-func (u *Service) BusinessMethod(param string) {
-    u.logger.Info("BusinessMethod missed a step because ...", "param", param)
-}
-```
-
-In simple function
-```go
-var LOG_MODULE = "module_name"
-
-func SimpleFunction(ctx context.Context, param1 string) {
-    logger := logging.CloneFromContext(ctx, LOG_MODULE)
-    logger.Info("simpleFunction start", "param1", param1)
-    // ...
-    logger.Info("simpleFunction end")
-}
-```
-
-### Helpers for context
-```go
-// Set logger to context
-func SetToContext(ctx context.Context, logger ILogger) {...}
-// Restore from context and clone
-func CloneFromContext(ctx context.Context, module string) ILogger {...}
-```
-

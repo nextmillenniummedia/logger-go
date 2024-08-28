@@ -78,16 +78,6 @@ var mapLevelName = map[Level]string{
 	LOG_SILENT:  "silent",
 }
 
-var mapNameLevel = map[string]Level{
-	"verbose": LOG_VERBOSE,
-	"debug":   LOG_DEBUG,
-	"info":    LOG_INFO,
-	"warn":    LOG_WARN,
-	"error":   LOG_ERROR,
-	"fatal":   LOG_FATAL,
-	"silent":  LOG_SILENT,
-}
-
 func getLevelHuman(level any) (human string, err error) {
 	levelNum, err := strconv.Atoi(fmt.Sprintf("%v", level))
 	if err != nil {

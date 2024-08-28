@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var PARAM_RESERVED_NAMES = []string{"level", "message", "time"}
+var PARAM_RESERVED_NAMES = []string{"level", "message", "time", "from"}
 var PARAM_PREFIX = "    "
 
 func NewFormatterPretty() IFormatter {
@@ -23,9 +23,15 @@ func (f *FormatterPretty) Format(params FormatParams) (result []byte, err error)
 	levelHuman = fmt.Sprintf("[%s]", levelHuman)
 	levelHuman = suffixToLength(levelHuman, " ", level_human_max_length+2)
 	message := params["message"]
-	lines := make([]string, len(params))
+	from, hasFrom := params["from"]
+
 	i := 0
-	lines[i] = fmt.Sprintf("%s %s %s", params["time"], levelHuman, message)
+	lines := make([]string, len(params))
+	if hasFrom {
+		lines[i] = fmt.Sprintf("%s %s [%s] %s", params["time"], levelHuman, from, message)
+	} else {
+		lines[i] = fmt.Sprintf("%s %s %s", params["time"], levelHuman, message)
+	}
 	for key, value := range params {
 		if Contains(PARAM_RESERVED_NAMES, key) {
 			continue

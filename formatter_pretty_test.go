@@ -38,6 +38,22 @@ func TestFormatterLevelHumanVerbose(t *testing.T) {
 	assert.Nil(err)
 }
 
+func TestFormatterFrom(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	formatter := NewFormatterPretty()
+	params := FormatParams{
+		"time":    "09:02:12",
+		"level":   10,
+		"message": "Test message",
+		"from":    "Service name",
+	}
+	result, err := formatter.Format(params)
+	expected := "09:02:12 [VERBOSE] [Service name] Test message\n"
+	assert.Equal(expected, string(result))
+	assert.Nil(err)
+}
+
 func TestFormatterStruct(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()

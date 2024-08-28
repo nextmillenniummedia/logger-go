@@ -10,7 +10,7 @@ func TestFormatterJson(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()
 	formatter := NewFormatterJson()
-	params := map[string]string{
+	params := FormatParams{
 		"param1": "value1",
 	}
 	result, err := formatter.Format(params)

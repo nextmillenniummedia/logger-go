@@ -1,5 +1,7 @@
 package loggergo
 
+import "fmt"
+
 func chunkBy[T any](items []T, chunkSize int) (chunks [][]T) {
 	if chunkSize == 0 {
 		panic(ErrorChunkSizeNotValid)
@@ -19,4 +21,31 @@ func cloneMap(original Params) Params {
 		cloned[key] = value
 	}
 	return cloned
+}
+
+func Contains[T comparable](s []T, e T) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func JoinString(items []string, delim string) string {
+	if len(items) == 0 {
+		return ""
+	}
+	result := items[0]
+	if len(items) == 1 {
+		return result
+	}
+	rest := items[1:]
+	for _, item := range rest {
+		if len(item) == 0 {
+			continue
+		}
+		result = fmt.Sprintf("%s%s%s", result, delim, item)
+	}
+	return result
 }

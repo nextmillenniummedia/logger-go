@@ -1,7 +1,9 @@
 package loggergo
 
 import (
+	"fmt"
 	"io"
+	"strconv"
 )
 
 type Level int8
@@ -50,7 +52,7 @@ type ILogger interface {
 	Timer(f ITimer) ILogger
 }
 
-type FormatParams map[string]string
+type FormatParams map[string]any
 type IFormatter interface {
 	Format(params FormatParams) (result []byte, err error)
 	Clone() IFormatter
@@ -82,4 +84,16 @@ var mapNameLevel = map[string]Level{
 	"error":   LOG_ERROR,
 	"fatal":   LOG_FATAL,
 	"silent":  LOG_SILENT,
+}
+
+func getLevelHuman(level any) (human string, err error) {
+	levelNum, err := strconv.Atoi(fmt.Sprintf("%v", level))
+	if err != nil {
+		return "", err
+	}
+	human, has := mapLevelName[Level(levelNum)]
+	if !has {
+		return "", ErrorLevelHumanNotFound
+	}
+	return human, nil
 }

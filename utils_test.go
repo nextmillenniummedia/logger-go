@@ -34,3 +34,24 @@ func TestChunkEmpty(t *testing.T) {
 	chunked := chunkBy(list, 2)
 	assert.Equal(0, len(chunked))
 }
+
+func TestContains(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	list := []int{1, 2}
+	assert.Equal(true, Contains(list, 2))
+	assert.Equal(false, Contains(list, 4))
+}
+
+func TestJoinStrings(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	list := []string{"1", "2", "3"}
+	assert.Equal("1-2-3", JoinString(list, "-"))
+	list = []string{"1"}
+	assert.Equal("1", JoinString(list, "-"))
+	list = []string{}
+	assert.Equal("", JoinString(list, "-"))
+	list = []string{"1", "", "3"}
+	assert.Equal("1-3", JoinString(list, "-"))
+}

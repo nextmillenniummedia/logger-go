@@ -1,6 +1,9 @@
 package loggergo
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 func NewFormatterJson() IFormatter {
 	return &FormatterJson{}
@@ -9,8 +12,12 @@ func NewFormatterJson() IFormatter {
 type FormatterJson struct {
 }
 
-func (f *FormatterJson) Format(params FormatParams) (result []byte, er error) {
-	return json.Marshal(params)
+func (f *FormatterJson) Format(params FormatParams) (result []byte, err error) {
+	formatted, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
+	}
+	return []byte(fmt.Sprintf("%s\n", string(formatted))), nil
 }
 
 func (f *FormatterJson) Clone() IFormatter {

@@ -14,6 +14,6 @@ func TestFormatterJson(t *testing.T) {
 		"param1": "value1",
 	}
 	result, err := formatter.Format(params)
-	assert.Equal(`{"param1":"value1"}`, string(result))
+	assert.Equal(`{"param1":"value1"}`+"\n", string(result))
 	assert.Nil(err)
 }

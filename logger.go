@@ -47,7 +47,7 @@ func (l *logger) From(from string) ILogger {
 }
 
 func (l *logger) Pretty() ILogger {
-	return l.Formatter(newFormatterPretty()).Timer(NewTimerPretty())
+	return l.Formatter(newFormatterPretty()).Timer(newTimerPretty())
 }
 
 func (l *logger) Params(key string, value any) ILogger {

@@ -16,7 +16,7 @@ func (t *timer) Clone() ITimer {
 	return &timer{}
 }
 
-func NewTimerPretty() ITimer {
+func newTimerPretty() ITimer {
 	return &timerPretty{}
 }
 

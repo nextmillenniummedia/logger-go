@@ -27,7 +27,7 @@ func (t *TimerPretty) Now() string {
 }
 
 func (t *TimerPretty) Clone() ITimer {
-	return &Timer{}
+	return &TimerPretty{}
 }
 
 func NewTimerTest(time string) ITimer {

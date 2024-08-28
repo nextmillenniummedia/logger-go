@@ -48,7 +48,7 @@ func TestLoggerParams(t *testing.T) {
 	logger := NewLogger().Writer(writer).Timer(timer).Level(LOG_INFO)
 	logger.Params("file", "any.go")
 	logger.Info("Order created", "order_id", 12)
-	expect := `{"file":"any.go","level":30,"message":"Order created","order_id":"12","time":"now"}` + "\n"
+	expect := `{"file":"any.go","level":30,"message":"Order created","order_id":12,"time":"now"}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
 }
 

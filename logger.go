@@ -123,7 +123,7 @@ func (l *Logger) makeParams(level Level, message string, params []any) FormatPar
 			continue
 		}
 		key := fmt.Sprintf("%s", chunk[0])
-		value := fmt.Sprintf("%v", chunk[1])
+		value := chunk[1]
 		p[key] = value
 	}
 	return p

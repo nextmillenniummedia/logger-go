@@ -55,3 +55,12 @@ func TestJoinStrings(t *testing.T) {
 	list = []string{"1", "", "3"}
 	assert.Equal("1-3", JoinString(list, "-"))
 }
+
+func TestSuffixToLength(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	assert.Equal("text", suffixToLength("text", " ", 4))
+	assert.Equal("text", suffixToLength("text", " ", 3))
+	assert.Equal("text  ", suffixToLength("text", " ", 6))
+	assert.Equal("text--", suffixToLength("text", "-", 6))
+}

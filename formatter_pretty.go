@@ -20,10 +20,12 @@ func (f *FormatterPretty) Format(params FormatParams) (result []byte, err error)
 		return nil, err
 	}
 	levelHuman = strings.ToUpper(levelHuman)
+	levelHuman = fmt.Sprintf("[%s]", levelHuman)
+	levelHuman = suffixToLength(levelHuman, " ", level_human_max_length+2)
 	message := params["message"]
 	lines := make([]string, len(params))
 	i := 0
-	lines[i] = fmt.Sprintf("%s [%s] %s", params["time"], levelHuman, message)
+	lines[i] = fmt.Sprintf("%s %s %s", params["time"], levelHuman, message)
 	for key, value := range params {
 		if Contains(PARAM_RESERVED_NAMES, key) {
 			continue

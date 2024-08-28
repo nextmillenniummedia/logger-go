@@ -66,6 +66,8 @@ type IWriter interface {
 	Clone() IWriter
 }
 
+var level_human_max_length = 7
+
 var mapLevelName = map[Level]string{
 	LOG_VERBOSE: "verbose",
 	LOG_DEBUG:   "debug",

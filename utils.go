@@ -49,3 +49,15 @@ func JoinString(items []string, delim string) string {
 	}
 	return result
 }
+
+func suffixToLength(text, suffix string, length int) string {
+	if len(text) >= length {
+		return text
+	}
+	dif := length - len(text)
+	result := text
+	for i := 0; i < dif; i++ {
+		result += suffix
+	}
+	return result
+}

@@ -112,7 +112,7 @@ func (l *Logger) log(level Level, message string, params ...any) ILogger {
 func (l *Logger) makeParams(level Level, message string, params []any) FormatParams {
 	lengthParams := len(l.params) + len(params) + 1
 	p := make(FormatParams, lengthParams)
-	p["level"] = fmt.Sprintf("%v", level)
+	p["level"] = level
 	p["message"] = message
 	p["time"] = l.timer.Now()
 	for key, value := range l.params {

@@ -42,6 +42,15 @@ func (l *logger) Level(level Level) ILogger {
 	return l
 }
 
+func (l *logger) LevelHuman(human string) ILogger {
+	var err error
+	l.level, err = fromHumanToLevel(human)
+	if err != nil {
+		panic(err)
+	}
+	return l
+}
+
 func (l *logger) From(from string) ILogger {
 	return l.Params("from", from)
 }

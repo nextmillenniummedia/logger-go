@@ -3,6 +3,7 @@ package loggergo
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func chunkBy[T any](items []T, chunkSize int) (chunks [][]T) {
@@ -66,7 +67,7 @@ func suffixToLength(text, suffix string, length int) string {
 }
 
 var level_human_max_length = 7
-var mapLevelName = map[Level]string{
+var mapLevelHuman = map[Level]string{
 	LOG_VERBOSE: "verbose",
 	LOG_DEBUG:   "debug",
 	LOG_INFO:    "info",
@@ -76,14 +77,33 @@ var mapLevelName = map[Level]string{
 	LOG_SILENT:  "silent",
 }
 
-func getLevelHuman(level any) (human string, err error) {
+func fromLevelToHuman(level any) (human string, err error) {
 	levelNum, err := strconv.Atoi(fmt.Sprintf("%v", level))
 	if err != nil {
 		return "", err
 	}
-	human, has := mapLevelName[Level(levelNum)]
+	human, has := mapLevelHuman[Level(levelNum)]
 	if !has {
 		return "", ErrorLevelHumanNotFound
 	}
 	return human, nil
+}
+
+var mapHumanLevel = map[string]Level{
+	"verbose": LOG_VERBOSE,
+	"debug":   LOG_DEBUG,
+	"info":    LOG_INFO,
+	"warn":    LOG_WARN,
+	"error":   LOG_ERROR,
+	"fatal":   LOG_FATAL,
+	"silent":  LOG_SILENT,
+}
+
+func fromHumanToLevel(human string) (level Level, err error) {
+	human = strings.ToLower(human)
+	level, has := mapHumanLevel[human]
+	if !has {
+		return LOG_INFO, ErrorLevelHumanNotFound
+	}
+	return level, nil
 }

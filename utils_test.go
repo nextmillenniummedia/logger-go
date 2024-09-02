@@ -64,3 +64,19 @@ func TestSuffixToLength(t *testing.T) {
 	assert.Equal("text  ", suffixToLength("text", " ", 6))
 	assert.Equal("text--", suffixToLength("text", "-", 6))
 }
+
+func TestHumanToLevel(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+
+	level, err := fromHumanToLevel("info")
+	assert.Equal(LOG_INFO, level)
+	assert.Nil(err)
+
+	level, err = fromHumanToLevel("Info")
+	assert.Equal(LOG_INFO, level)
+	assert.Nil(err)
+
+	level, err = fromHumanToLevel("qwerty")
+	assert.Equal(ErrorLevelHumanNotFound, err)
+}

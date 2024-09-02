@@ -6,7 +6,7 @@ import (
 )
 
 var param_reserved_names = []string{"level", "message", "time", "from"}
-var parma_prefix = "    "
+var parma_prefix = "                   "
 
 func newFormatterPretty() IFormatter {
 	return &formatterPretty{}
@@ -15,7 +15,7 @@ func newFormatterPretty() IFormatter {
 type formatterPretty struct{}
 
 func (f *formatterPretty) Format(params FormatParams) (result []byte, err error) {
-	levelHuman, err := getLevelHuman(params["level"])
+	levelHuman, err := fromLevelToHuman(params["level"])
 	if err != nil {
 		return nil, err
 	}

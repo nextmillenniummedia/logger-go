@@ -18,7 +18,7 @@ func TestFormatterPretty(t *testing.T) {
 	}
 	result, err := formatter.Format(params)
 	expected := "09:02:12 [INFO]    Test message\n" +
-		"    param1: value1\n"
+		"                   param1: value1\n"
 	assert.Equal(expected, string(result))
 	assert.Nil(err)
 }
@@ -72,9 +72,10 @@ func TestFormatterStruct(t *testing.T) {
 		"param2":  m,
 	}
 	result, err := formatter.Format(params)
-	expected := "09:02:12 [INFO]    Test message\n" +
-		"    param1: {Name:Eugen Age:18}\n" +
-		"    param2: map[a:123 b:text]\n"
+	expected := "" +
+		"09:02:12 [INFO]    Test message\n" +
+		"                   param1: {Name:Eugen Age:18}\n" +
+		"                   param2: map[a:123 b:text]\n"
 	assert.Equal(expected, string(result))
 	assert.Nil(err)
 }

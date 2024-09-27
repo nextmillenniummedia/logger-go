@@ -2,6 +2,7 @@ package loggergo
 
 import (
 	"fmt"
+	"runtime"
 )
 
 func New() ILogger {
@@ -106,10 +107,16 @@ func (l *logger) Fatal(message string, params ...any) ILogger {
 }
 
 func (l *logger) log(level Level, message string, params ...any) ILogger {
+	_, fileName, strNum, ok := runtime.Caller(2)
+	if !ok {
+		fileName = "unknown"
+		strNum = 0
+	}
 	if l.level > level {
 		return l
 	}
-	paramsFinal := l.makeParams(level, message, params)
+	sourceString := fmt.Sprintf("%s:%d", fileName, strNum)
+	paramsFinal := l.makeParams(level, message, sourceString, params)
 	result, err := l.formatter.Format(paramsFinal)
 	if err != nil {
 		panic(err)
@@ -118,9 +125,10 @@ func (l *logger) log(level Level, message string, params ...any) ILogger {
 	return l
 }
 
-func (l *logger) makeParams(level Level, message string, params []any) FormatParams {
+func (l *logger) makeParams(level Level, message, source string, params []any) FormatParams {
 	lengthParams := len(l.params) + len(params) + 1
 	p := make(FormatParams, lengthParams)
+	p["source"] = source
 	p["level"] = level
 	p["message"] = message
 	p["time"] = l.timer.Now()

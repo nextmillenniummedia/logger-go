@@ -1,6 +1,8 @@
 package loggergo
 
 import (
+	"fmt"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,7 +17,8 @@ func TestLoggerLevelSmaller(t *testing.T) {
 	timer := newTimerTest(now)
 	logger := New().Writer(writer).Timer(timer).Level(LOG_VERBOSE)
 	logger.Info("Test")
-	expect := `{"level":30,"message":"Test","time":"now"}` + "\n"
+	_, fileName, strNum, _ := runtime.Caller(0)
+	expect := `{"level":30,"message":"Test","source":"` + fileName + `:` + fmt.Sprintf("%d", strNum-1) + `","time":"now"}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
 }
 
@@ -36,7 +39,8 @@ func TestLoggerLevelEqual(t *testing.T) {
 	timer := newTimerTest(now)
 	logger := New().Writer(writer).Timer(timer).Level(LOG_INFO)
 	logger.Info("Test")
-	expect := `{"level":30,"message":"Test","time":"now"}` + "\n"
+	_, fileName, strNum, _ := runtime.Caller(0)
+	expect := `{"level":30,"message":"Test","source":"` + fileName + `:` + fmt.Sprintf("%d", strNum-1) + `","time":"now"}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
 }
 
@@ -48,7 +52,8 @@ func TestLoggerParams(t *testing.T) {
 	logger := New().Writer(writer).Timer(timer).Level(LOG_INFO)
 	logger.Params("file", "any.go")
 	logger.Info("Order created", "order_id", 12)
-	expect := `{"file":"any.go","level":30,"message":"Order created","order_id":12,"time":"now"}` + "\n"
+	_, fileName, strNum, _ := runtime.Caller(0)
+	expect := `{"file":"any.go","level":30,"message":"Order created","order_id":12,"source":"` + fileName + `:` + fmt.Sprintf("%d", strNum-1) + `","time":"now"}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
 }
 
@@ -60,7 +65,8 @@ func TestLoggerParamsWithoutValue(t *testing.T) {
 	logger := New().Writer(writer).Timer(timer).Level(LOG_INFO)
 	logger.Params("file", "any.go")
 	logger.Info("Order created", "order_id")
-	expect := `{"file":"any.go","level":30,"message":"Order created","order_id":"-","time":"now"}` + "\n"
+	_, fileName, strNum, _ := runtime.Caller(0)
+	expect := `{"file":"any.go","level":30,"message":"Order created","order_id":"-","source":"` + fileName + `:` + fmt.Sprintf("%d", strNum-1) + `","time":"now"}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
 }
 
@@ -73,6 +79,7 @@ func TestLoggerRemoveParams(t *testing.T) {
 	logger.Params("file", "any.go").Params("user_id", 1).Params("company_id", 2)
 	logger.RemoveParams("file", "user_id")
 	logger.Info("Test")
-	expect := `{"company_id":"2","level":30,"message":"Test","time":"now"}` + "\n"
+	_, fileName, strNum, _ := runtime.Caller(0)
+	expect := `{"company_id":"2","level":30,"message":"Test","source":"` + fileName + `:` + fmt.Sprintf("%d", strNum-1) + `","time":"now"}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
 }

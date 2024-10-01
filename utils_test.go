@@ -80,3 +80,43 @@ func TestHumanToLevel(t *testing.T) {
 	level, err = fromHumanToLevel("qwerty")
 	assert.Equal(ErrorLevelHumanNotFound, err)
 }
+
+func Test_cutFileNamePath(t *testing.T) {
+	type args struct {
+		fullPath string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "filename Only",
+			args: args{
+				fullPath: "whisperingOaks.go",
+			},
+			want: "whisperingOaks.go",
+		},
+		{
+			name: "filename and one folder",
+			args: args{
+				fullPath: "hey/whisperingOaks.go",
+			},
+			want: "hey/whisperingOaks.go",
+		},
+		{
+			name: "longpath",
+			args: args{
+				fullPath: "hey/whisperingOaks/I/used/to/go/there/when/i/was/a/kid.go",
+			},
+			want: "a/kid.go",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := cutFileNamePath(tt.args.fullPath); got != tt.want {
+				t.Errorf("cutFileNamePath() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

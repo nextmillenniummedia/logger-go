@@ -2,7 +2,10 @@ package loggergo
 
 import (
 	"fmt"
+	"runtime"
 )
+
+const CALLER_DEPTH = 2
 
 func New() ILogger {
 	return &logger{
@@ -106,10 +109,17 @@ func (l *logger) Fatal(message string, params ...any) ILogger {
 }
 
 func (l *logger) log(level Level, message string, params ...any) ILogger {
+
 	if l.level > level {
 		return l
 	}
-	paramsFinal := l.makeParams(level, message, params)
+	_, filePath, strNum, ok := runtime.Caller(CALLER_DEPTH)
+	if !ok {
+		filePath = "unknown"
+		strNum = 0
+	}
+	sourceString := fmt.Sprintf("%s:%d", cutFileNamePath(filePath), strNum)
+	paramsFinal := l.makeParams(level, message, sourceString, params)
 	result, err := l.formatter.Format(paramsFinal)
 	if err != nil {
 		panic(err)
@@ -118,12 +128,9 @@ func (l *logger) log(level Level, message string, params ...any) ILogger {
 	return l
 }
 
-func (l *logger) makeParams(level Level, message string, params []any) FormatParams {
+func (l *logger) makeParams(level Level, message, source string, params []any) FormatParams {
 	lengthParams := len(l.params) + len(params) + 1
 	p := make(FormatParams, lengthParams)
-	p["level"] = level
-	p["message"] = message
-	p["time"] = l.timer.Now()
 	for key, value := range l.params {
 		p[key] = value
 	}
@@ -135,5 +142,9 @@ func (l *logger) makeParams(level Level, message string, params []any) FormatPar
 			p[key] = "-"
 		}
 	}
+	p["source"] = source
+	p["level"] = level
+	p["message"] = message
+	p["time"] = l.timer.Now()
 	return p
 }

@@ -5,6 +5,8 @@ import (
 	"runtime"
 )
 
+const CALLER_DEPTH = 2
+
 func New() ILogger {
 	return &logger{
 		level:     LOG_ERROR,
@@ -111,7 +113,7 @@ func (l *logger) log(level Level, message string, params ...any) ILogger {
 	if l.level > level {
 		return l
 	}
-	_, filePath, strNum, ok := runtime.Caller(2)
+	_, filePath, strNum, ok := runtime.Caller(CALLER_DEPTH)
 	if !ok {
 		filePath = "unknown"
 		strNum = 0

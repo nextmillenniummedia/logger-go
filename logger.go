@@ -107,15 +107,16 @@ func (l *logger) Fatal(message string, params ...any) ILogger {
 }
 
 func (l *logger) log(level Level, message string, params ...any) ILogger {
-	_, fileName, strNum, ok := runtime.Caller(2)
-	if !ok {
-		fileName = "unknown"
-		strNum = 0
-	}
+
 	if l.level > level {
 		return l
 	}
-	sourceString := fmt.Sprintf("%s:%d", fileName, strNum)
+	_, filePath, strNum, ok := runtime.Caller(2)
+	if !ok {
+		filePath = "unknown"
+		strNum = 0
+	}
+	sourceString := fmt.Sprintf("%s:%d", cutFileNamePath(filePath), strNum)
 	paramsFinal := l.makeParams(level, message, sourceString, params)
 	result, err := l.formatter.Format(paramsFinal)
 	if err != nil {
@@ -128,10 +129,6 @@ func (l *logger) log(level Level, message string, params ...any) ILogger {
 func (l *logger) makeParams(level Level, message, source string, params []any) FormatParams {
 	lengthParams := len(l.params) + len(params) + 1
 	p := make(FormatParams, lengthParams)
-	p["source"] = source
-	p["level"] = level
-	p["message"] = message
-	p["time"] = l.timer.Now()
 	for key, value := range l.params {
 		p[key] = value
 	}
@@ -143,5 +140,9 @@ func (l *logger) makeParams(level Level, message, source string, params []any) F
 			p[key] = "-"
 		}
 	}
+	p["source"] = source
+	p["level"] = level
+	p["message"] = message
+	p["time"] = l.timer.Now()
 	return p
 }

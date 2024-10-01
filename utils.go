@@ -107,3 +107,16 @@ func fromHumanToLevel(human string) (level Level, err error) {
 	}
 	return level, nil
 }
+
+func cutFileNamePath(fullPath string) string {
+	slashLastIdx := strings.LastIndex(fullPath, "/")
+	if slashLastIdx < 0 {
+		return fullPath
+	}
+	slashIdx := strings.LastIndex(fullPath[:slashLastIdx], "/")
+	if slashIdx < 0 {
+		return fullPath
+	}
+	return fullPath[slashIdx+1:]
+
+}

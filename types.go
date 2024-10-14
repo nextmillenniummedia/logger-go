@@ -49,6 +49,10 @@ type ILogger interface {
 	Formatter(f IFormatter) ILogger
 	// Set timer. By default is time
 	Timer(f ITimer) ILogger
+	// Set sampling in percent from 0.0 to 100.0
+	Sampling(percent float64) ILogger
+	// Set sampler
+	Sampler(sampler ISampler) ILogger
 }
 
 type IFormatter interface {
@@ -62,6 +66,10 @@ type ITimer interface {
 type IWriter interface {
 	io.Writer
 	Clone() IWriter
+}
+type ISampler interface {
+	Need() bool
+	Clone() ISampler
 }
 
 type FormatParams map[string]any

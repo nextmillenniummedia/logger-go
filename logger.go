@@ -14,6 +14,7 @@ func New() ILogger {
 		writer:    newWriterStdout(),
 		formatter: newFormatterJson(),
 		timer:     newTimer(),
+		sampler:   newSamplerEmpty(),
 	}
 }
 
@@ -23,6 +24,7 @@ type logger struct {
 	formatter IFormatter
 	writer    IWriter
 	timer     ITimer
+	sampler   ISampler
 }
 
 func (l *logger) Writer(w IWriter) ILogger {
@@ -81,6 +83,7 @@ func (l *logger) Clone() ILogger {
 		formatter: l.formatter.Clone(),
 		writer:    l.writer.Clone(),
 		timer:     l.timer.Clone(),
+		sampler:   l.sampler.Clone(),
 	}
 }
 
@@ -108,9 +111,17 @@ func (l *logger) Fatal(message string, params ...any) ILogger {
 	return l.log(LOG_FATAL, message, params...)
 }
 
-func (l *logger) log(level Level, message string, params ...any) ILogger {
+func (l *logger) Sampling(percent float64) ILogger {
+	return l.Sampler(newSamplerPercent(percent))
+}
 
-	if l.level > level {
+func (l *logger) Sampler(sampler ISampler) ILogger {
+	l.sampler = sampler
+	return l
+}
+
+func (l *logger) log(level Level, message string, params ...any) ILogger {
+	if l.sampler.Need() || l.level > level {
 		return l
 	}
 	_, filePath, strNum, ok := runtime.Caller(CALLER_DEPTH)

@@ -2,9 +2,15 @@ package loggergo
 
 import (
 	"fmt"
+	"math/rand/v2"
 	"strconv"
 	"strings"
 )
+
+func PercentFloat(percent float64) bool {
+	value := rand.Float64() * 100
+	return value < percent
+}
 
 func chunkBy[T any](items []T, chunkSize int) (chunks [][]T) {
 	if chunkSize == 0 {

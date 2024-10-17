@@ -126,3 +126,11 @@ func cutFileNamePath(fullPath string) string {
 	return fullPath[slashIdx+1:]
 
 }
+
+// Abs returns the absolute value of x.
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}

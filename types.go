@@ -2,6 +2,7 @@ package loggergo
 
 import (
 	"io"
+	"time"
 )
 
 type Level int8
@@ -53,6 +54,10 @@ type ILogger interface {
 	Sampling(percent float64) ILogger
 	// Set sampler
 	Sampler(sampler ISampler) ILogger
+	// Set statistic
+	Statistic(statistic IStatistic) ILogger
+	// Print statistic by interval
+	StatisticPrintByInterval(t time.Duration, reset bool) ILogger
 }
 
 type IFormatter interface {

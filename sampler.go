@@ -25,7 +25,7 @@ type samplerPercent struct {
 }
 
 func (s *samplerPercent) Need() bool {
-	return PercentFloat(s.percent)
+	return !PercentFloat(s.percent)
 }
 
 func (s *samplerPercent) Clone() ISampler {

@@ -3,6 +3,7 @@ package loggergo
 import (
 	"fmt"
 	"runtime"
+	"time"
 )
 
 const CALLER_DEPTH = 2
@@ -15,6 +16,7 @@ func New() ILogger {
 		formatter: newFormatterJson(),
 		timer:     newTimer(),
 		sampler:   newSamplerEmpty(),
+		statistic: NewStatisticEmpty(),
 	}
 }
 
@@ -25,6 +27,7 @@ type logger struct {
 	writer    IWriter
 	timer     ITimer
 	sampler   ISampler
+	statistic IStatistic
 }
 
 func (l *logger) Writer(w IWriter) ILogger {
@@ -84,6 +87,7 @@ func (l *logger) Clone() ILogger {
 		writer:    l.writer.Clone(),
 		timer:     l.timer.Clone(),
 		sampler:   l.sampler.Clone(),
+		statistic: l.statistic,
 	}
 }
 
@@ -120,10 +124,22 @@ func (l *logger) Sampler(sampler ISampler) ILogger {
 	return l
 }
 
+func (l *logger) Statistic(statistic IStatistic) ILogger {
+	l.statistic = statistic
+	return l
+}
+
+func (l *logger) StatisticPrintByInterval(t time.Duration, reset bool) ILogger {
+	go statisticPrintByInterval(t, l, l.statistic, reset)
+	return l
+}
+
 func (l *logger) log(level Level, message string, params ...any) ILogger {
+	l.statistic.Call(level)
 	if l.sampler.Need() || l.level > level {
 		return l
 	}
+	l.statistic.Called(level)
 	_, filePath, strNum, ok := runtime.Caller(CALLER_DEPTH)
 	if !ok {
 		filePath = "unknown"
@@ -158,4 +174,10 @@ func (l *logger) makeParams(level Level, message, source string, params []any) F
 	p["message"] = message
 	p["time"] = l.timer.Now()
 	return p
+}
+
+func statisticPrintByInterval(t time.Duration, logger ILogger, statistic IStatistic, reset bool) {
+	for range time.Tick(t) {
+		statistic.Print(logger, reset)
+	}
 }

@@ -72,10 +72,12 @@ func (s *statistic) Result() StatisticResult {
 func (s *statistic) Print(logger ILogger, reset bool) {
 	result := s.Result()
 	levels := make(map[string]int)
+	s.mut.RLock()
 	for level, value := range s.callLevel {
 		levelHuman, _ := fromLevelToHuman(level)
 		levels[levelHuman] = value
 	}
+	s.mut.RUnlock()
 	logger.Info("Logger statistic",
 		"call", result.Call,
 		"called", result.Called,

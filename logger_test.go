@@ -83,3 +83,12 @@ func TestLoggerRemoveParams(t *testing.T) {
 	expect := `{"company_id":"2","level":30,"message":"Test","source":"` + cutFileNamePath(fileName) + `:` + fmt.Sprintf("%d", strNum-1) + `","time":"now"}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
 }
+
+func TestLoggerHasLevel(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	logger := New().Level(LOG_INFO)
+	assert.Equal(false, logger.HasLevel(LOG_DEBUG))
+	assert.Equal(true, logger.HasLevel(LOG_WARN))
+	assert.Equal(true, logger.HasLevel(LOG_INFO))
+}

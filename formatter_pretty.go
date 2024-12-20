@@ -6,7 +6,7 @@ import (
 )
 
 var param_reserved_names = []string{"level", "message", "time", "from"}
-var parma_prefix = "                   "
+var param_prefix = "                   "
 
 func newFormatterPretty() IFormatter {
 	return &formatterPretty{}
@@ -37,7 +37,7 @@ func (f *formatterPretty) Format(params FormatParams) (result []byte, err error)
 			continue
 		}
 		i++
-		lines[i] = fmt.Sprintf("%s%s: %+v", parma_prefix, key, value)
+		lines[i] = fmt.Sprintf("%s%s: %+v", param_prefix, key, value)
 	}
 	result = []byte(joinString(lines, "\n") + "\n")
 	return result, nil

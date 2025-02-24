@@ -59,6 +59,10 @@ func (l *logger) LevelHuman(human string) ILogger {
 	return l
 }
 
+func (l *logger) HasLevel(level Level) bool {
+	return l.level <= level
+}
+
 func (l *logger) From(from string) ILogger {
 	return l.Params("from", from)
 }

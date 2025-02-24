@@ -34,6 +34,8 @@ type ILogger interface {
 	Level(level Level) ILogger
 	// Setup level by human text
 	LevelHuman(level string) ILogger
+	// Check the level, will this log be written or not
+	HasLevel(level Level) bool
 	// Logs were sent from
 	From(from string) ILogger
 	// Clone logger with his settings

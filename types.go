@@ -34,6 +34,10 @@ type ILogger interface {
 	Level(level Level) ILogger
 	// Setup level by human text
 	LevelHuman(level string) ILogger
+	// Get level
+	GetLevel() Level
+	// Get level as human
+	GetLevelHuman() string
 	// Check the level, will this log be written or not
 	HasLevel(level Level) bool
 	// Check on level

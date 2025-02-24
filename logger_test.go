@@ -93,6 +93,24 @@ func TestLoggerHasLevel(t *testing.T) {
 	assert.Equal(true, logger.HasLevel(LOG_INFO))
 }
 
+func TestLoggerGetLevel(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	logger1 := New().Level(LOG_INFO)
+	logger2 := New().Level(LOG_ERROR)
+	assert.Equal(LOG_INFO, logger1.GetLevel())
+	assert.Equal(LOG_ERROR, logger2.GetLevel())
+}
+
+func TestLoggerGetLevelHuman(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	logger1 := New().Level(LOG_INFO)
+	logger2 := New().Level(LOG_ERROR)
+	assert.Equal("info", logger1.GetLevelHuman())
+	assert.Equal("error", logger2.GetLevelHuman())
+}
+
 func TestLoggerIsLevel(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()

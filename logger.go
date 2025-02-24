@@ -59,6 +59,15 @@ func (l *logger) LevelHuman(human string) ILogger {
 	return l
 }
 
+func (l *logger) GetLevel() Level {
+	return l.level
+}
+
+func (l *logger) GetLevelHuman() string {
+	human, _ := fromLevelToHuman(l.level)
+	return human
+}
+
 func (l *logger) HasLevel(level Level) bool {
 	return l.level <= level
 }

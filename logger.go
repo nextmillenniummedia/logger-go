@@ -63,6 +63,19 @@ func (l *logger) HasLevel(level Level) bool {
 	return l.level <= level
 }
 
+func (l *logger) IsLevel(level Level) bool {
+	return l.level == level
+}
+
+func (l *logger) IsPretty() bool {
+	switch l.formatter.(type) {
+	case *formatterPretty:
+		return true
+	default:
+		return false
+	}
+}
+
 func (l *logger) From(from string) ILogger {
 	return l.Params("from", from)
 }

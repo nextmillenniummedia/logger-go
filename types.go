@@ -36,6 +36,10 @@ type ILogger interface {
 	LevelHuman(level string) ILogger
 	// Check the level, will this log be written or not
 	HasLevel(level Level) bool
+	// Check on level
+	IsLevel(level Level) bool
+	// Check on pretty mod
+	IsPretty() bool
 	// Logs were sent from
 	From(from string) ILogger
 	// Clone logger with his settings

@@ -92,3 +92,21 @@ func TestLoggerHasLevel(t *testing.T) {
 	assert.Equal(true, logger.HasLevel(LOG_WARN))
 	assert.Equal(true, logger.HasLevel(LOG_INFO))
 }
+
+func TestLoggerIsLevel(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	logger := New().Level(LOG_INFO)
+	assert.Equal(true, logger.IsLevel(LOG_INFO))
+	assert.Equal(false, logger.IsLevel(LOG_ERROR))
+	assert.Equal(false, logger.IsLevel(LOG_SILENT))
+}
+
+func TestLoggerIsPretty(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	loggerPretty := New().Level(LOG_INFO).Pretty()
+	loggerNotPretty := New().Level(LOG_INFO)
+	assert.Equal(true, loggerPretty.IsPretty())
+	assert.Equal(false, loggerNotPretty.IsPretty())
+}

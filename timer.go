@@ -9,7 +9,7 @@ func newTimer() ITimer {
 type timer struct{}
 
 func (t *timer) Now() string {
-	return time.Now().Format(time.RFC3339)
+	return time.Now().Format(time.RFC3339Nano)
 }
 
 func (t *timer) Clone() ITimer {

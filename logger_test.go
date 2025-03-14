@@ -134,16 +134,20 @@ func TestLoggerDisableParams(t *testing.T) {
 	t.Parallel()
 	writer := newWriterTest()
 	writer2 := newWriterTest()
+	writer3 := newWriterTest()
 	timer := newTimerTest(now)
 	disableParams := []string{"level", "time", "source"}
 	logger := New().Level(LOG_VERBOSE).Timer(timer).DisableParams(disableParams)
 	logger.Writer(writer).Info("Viewed1")
-	logger.Clone().Writer(writer).Info("Viewed2", "param", 1)
-	logger.Clone().DisableParams(nil).Writer(writer2).Info("Viewed2", "param", 1)
+	logger.Clone().Writer(writer).Info("Viewed2", "param2", 2)
+	logger.Clone().DisableParams(nil).Writer(writer2).Info("") // Disabled
+	logger.Clone().DisableParams([]string{}).Writer(writer3).Info("") // Disabled
 	expect := `{"message":"Viewed1"}` + "\n"
-	expect += `{"message":"Viewed2","param":1}` + "\n"
+	expect += `{"message":"Viewed2","param2":2}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
-	assert.Contains(writer2.ReadAll(), "level") // parameters will be written as the feature is disabled
+	// Parameters will be written as the feature is disabled
+	assert.Contains(writer2.ReadAll(), "level") 
+	assert.Contains(writer3.ReadAll(), "level") 
 }
 
 func TestLoggerEnableFrom(t *testing.T) {
@@ -159,10 +163,12 @@ func TestLoggerEnableFrom(t *testing.T) {
 	logger.Info("Hidden")
 	logger.Clone().Writer(writer).From("service_two").Info("Viewed1")
 	logger.Clone().Writer(writer).From("service_three").Info("Viewed2")
-	logger.Clone().Writer(writer).From("service_any").EnableFrom(nil).Info("Viewed3")
+	logger.Clone().Writer(writer).From("service_any").EnableFrom(nil).Info("Viewed3") // Turn off
+	logger.Clone().Writer(writer).From("service_any").EnableFrom([]string{}).Info("Viewed4") // Turn off
 	logger.Clone().Writer(writer).Info("Hidden")
 	expect := `{"from":"service_two","message":"Viewed1"}` + "\n"
 	expect += `{"from":"service_three","message":"Viewed2"}` + "\n"
 	expect += `{"from":"service_any","message":"Viewed3"}` + "\n"
+	expect += `{"from":"service_any","message":"Viewed4"}` + "\n"
 	assert.Equal(expect, writer.ReadAll())
 }

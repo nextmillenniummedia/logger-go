@@ -94,7 +94,7 @@ func (l *logger) From(from string) ILogger {
 }
 
 func (l *logger) EnableFrom(from []string) ILogger {
-	if from == nil {
+	if len(from) == 0 {
 		l.enabledFrom = nil
 		return l
 	}
@@ -116,7 +116,7 @@ func (l *logger) Params(key string, value any) ILogger {
 }
 
 func (l *logger) DisableParams(params []string) ILogger {
-	if params == nil {
+	if len(params) == 0 {
 		l.disableParam = nil
 	}
 	disableParam := make(map[string]any, len(params))

@@ -10,24 +10,28 @@ const CALLER_DEPTH = 2
 
 func New() ILogger {
 	return &logger{
-		level:     LOG_ERROR,
-		params:    make(logParams),
-		writer:    newWriterStdout(),
-		formatter: newFormatterJson(),
-		timer:     newTimer(),
-		sampler:   newSamplerEmpty(),
-		statistic: NewStatisticEmpty(),
+		level:        LOG_ERROR,
+		enabledFrom:  nil,
+		disableParam: nil,
+		params:       make(logParams),
+		writer:       newWriterStdout(),
+		formatter:    newFormatterJson(),
+		timer:        newTimer(),
+		sampler:      newSamplerEmpty(),
+		statistic:    NewStatisticEmpty(),
 	}
 }
 
 type logger struct {
-	level     Level
-	params    logParams
-	formatter IFormatter
-	writer    IWriter
-	timer     ITimer
-	sampler   ISampler
-	statistic IStatistic
+	level        Level
+	enabledFrom  map[string]any
+	disableParam map[string]any
+	params       logParams
+	formatter    IFormatter
+	writer       IWriter
+	timer        ITimer
+	sampler      ISampler
+	statistic    IStatistic
 }
 
 func (l *logger) Writer(w IWriter) ILogger {
@@ -89,12 +93,37 @@ func (l *logger) From(from string) ILogger {
 	return l.Params("from", from)
 }
 
+func (l *logger) EnableFrom(from []string) ILogger {
+	if from == nil {
+		l.enabledFrom = nil
+		return l
+	}
+	enabledFrom := make(map[string]any, len(from))
+	for _, item := range from {
+		enabledFrom[item] = struct{}{}
+	}
+	l.enabledFrom = enabledFrom
+	return l
+}
+
 func (l *logger) Pretty() ILogger {
 	return l.Formatter(newFormatterPretty()).Timer(newTimerPretty())
 }
 
 func (l *logger) Params(key string, value any) ILogger {
 	l.params[key] = fmt.Sprintf("%v", value)
+	return l
+}
+
+func (l *logger) DisableParams(params []string) ILogger {
+	if params == nil {
+		l.disableParam = nil
+	}
+	disableParam := make(map[string]any, len(params))
+	for _, param := range params {
+		disableParam[param] = struct{}{}
+	}
+	l.disableParam = disableParam
 	return l
 }
 
@@ -107,13 +136,15 @@ func (l *logger) RemoveParams(names ...string) ILogger {
 
 func (l *logger) Clone() ILogger {
 	return &logger{
-		level:     l.level,
-		params:    cloneMap(l.params),
-		formatter: l.formatter.Clone(),
-		writer:    l.writer.Clone(),
-		timer:     l.timer.Clone(),
-		sampler:   l.sampler.Clone(),
-		statistic: l.statistic,
+		level:        l.level,
+		params:       cloneMap(l.params),
+		enabledFrom:  l.enabledFrom,
+		disableParam: l.disableParam,
+		formatter:    l.formatter.Clone(),
+		writer:       l.writer.Clone(),
+		timer:        l.timer.Clone(),
+		sampler:      l.sampler.Clone(),
+		statistic:    l.statistic,
 	}
 }
 
@@ -162,7 +193,7 @@ func (l *logger) StatisticPrintByInterval(t time.Duration, reset bool) ILogger {
 
 func (l *logger) log(level Level, message string, params ...any) ILogger {
 	l.statistic.Call(level)
-	if l.sampler.Need() || l.level > level {
+	if l.sampler.Need() || l.level > level || !l.isEnabledFrom() {
 		return l
 	}
 	l.statistic.Called(level)
@@ -199,7 +230,40 @@ func (l *logger) makeParams(level Level, message, source string, params []any) F
 	p["level"] = level
 	p["message"] = message
 	p["time"] = l.timer.Now()
+	l.filterDisabledParams(p)
 	return p
+}
+
+func (l *logger) isEnabledFrom() bool {
+	if l.enabledFrom == nil {
+		return true
+	}
+	from, hasFrom := l.params["from"]
+	if !hasFrom {
+		return false
+	}
+	_, enabled := l.enabledFrom[from]
+	return enabled
+}
+
+func (l *logger) filterDisabledParams(params map[string]any) map[string]any {
+	if l.disableParam == nil {
+		return params
+	}
+	for name := range params {
+		if l.isDisableParam(name) {
+			delete(params, name)
+		}
+	}
+	return params
+}
+
+func (l *logger) isDisableParam(param string) bool {
+	if l.disableParam == nil {
+		return false
+	}
+	_, disabled := l.disableParam[param]
+	return disabled
 }
 
 func statisticPrintByInterval(t time.Duration, logger ILogger, statistic IStatistic, reset bool) {

@@ -46,12 +46,16 @@ type ILogger interface {
 	IsPretty() bool
 	// Logs were sent from
 	From(from string) ILogger
+	// Sets up the "from" we will be working with
+	EnableFrom(from []string) ILogger
 	// Clone logger with his settings
 	Clone() ILogger
 	// Output is pretty format
 	Pretty() ILogger
 	// This params will added to all logs
 	Params(key string, value any) ILogger
+	// Sets up the "params" we will be not working with
+	DisableParams(params []string) ILogger
 	// Remove applied params from all logs
 	RemoveParams(names ...string) ILogger
 	// Set writer. By default is stdout

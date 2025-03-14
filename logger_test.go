@@ -128,3 +128,41 @@ func TestLoggerIsPretty(t *testing.T) {
 	assert.Equal(true, loggerPretty.IsPretty())
 	assert.Equal(false, loggerNotPretty.IsPretty())
 }
+
+func TestLoggerDisableParams(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	writer := newWriterTest()
+	writer2 := newWriterTest()
+	timer := newTimerTest(now)
+	disableParams := []string{"level", "time", "source"}
+	logger := New().Level(LOG_VERBOSE).Timer(timer).DisableParams(disableParams)
+	logger.Writer(writer).Info("Viewed1")
+	logger.Clone().Writer(writer).Info("Viewed2", "param", 1)
+	logger.Clone().DisableParams(nil).Writer(writer2).Info("Viewed2", "param", 1)
+	expect := `{"message":"Viewed1"}` + "\n"
+	expect += `{"message":"Viewed2","param":1}` + "\n"
+	assert.Equal(expect, writer.ReadAll())
+	assert.Contains(writer2.ReadAll(), "level") // parameters will be written as the feature is disabled
+}
+
+func TestLoggerEnableFrom(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	writer := newWriterTest()
+	timer := newTimerTest(now)
+	disableParams := []string{"level", "time", "source"}
+	enabledFrom := []string{"service_two", "service_three"}
+	logger := New().Level(LOG_VERBOSE).Timer(timer).Writer(writer).
+		DisableParams(disableParams).
+		EnableFrom(enabledFrom)
+	logger.Info("Hidden")
+	logger.Clone().Writer(writer).From("service_two").Info("Viewed1")
+	logger.Clone().Writer(writer).From("service_three").Info("Viewed2")
+	logger.Clone().Writer(writer).From("service_any").EnableFrom(nil).Info("Viewed3")
+	logger.Clone().Writer(writer).Info("Hidden")
+	expect := `{"from":"service_two","message":"Viewed1"}` + "\n"
+	expect += `{"from":"service_three","message":"Viewed2"}` + "\n"
+	expect += `{"from":"service_any","message":"Viewed3"}` + "\n"
+	assert.Equal(expect, writer.ReadAll())
+}

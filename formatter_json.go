@@ -27,9 +27,9 @@ func (f *formatterJson) Clone() IFormatter {
 
 func checkForEmptyRaw(params FormatParams) {
 	for key, value := range params {
-		switch valyeTyped := value.(type) {
+		switch valueTyped := value.(type) {
 		case json.RawMessage:
-			if len(valyeTyped) == 0 {
+			if len(valueTyped) == 0 {
 				params[key] = json.RawMessage(`null`)
 			}
 		}

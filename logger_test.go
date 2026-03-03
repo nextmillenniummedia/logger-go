@@ -44,6 +44,21 @@ func TestLoggerLevelEqual(t *testing.T) {
 	assert.Equal(expect, writer.ReadAll())
 }
 
+func TestLoggerGetParam(t *testing.T) {
+	assert := assert.New(t)
+	t.Parallel()
+	writer := newWriterTest()
+	timer := newTimerTest(now)
+	logger := New().Writer(writer).Timer(timer).Level(LOG_INFO)
+	logger.Params("param1", "value1")
+	value1, err1 := logger.GetParam("param1")
+	value2, err2 := logger.GetParam("param2")
+	assert.Equal("value1", value1)
+	assert.Nil(err1)
+	assert.Equal(value2, "")
+	assert.ErrorIs(err2, ErrorParamNotFound)
+}
+
 func TestLoggerParams(t *testing.T) {
 	assert := assert.New(t)
 	t.Parallel()

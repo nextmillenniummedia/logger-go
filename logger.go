@@ -72,6 +72,14 @@ func (l *logger) GetLevelHuman() string {
 	return human
 }
 
+func (l *logger) GetParam(name string) (string, error) {
+	value, has := l.params[name]
+	if !has {
+		return "", fmt.Errorf("%w: param=%s", ErrorParamNotFound, name)
+	}
+	return value, nil
+}
+
 func (l *logger) HasLevel(level Level) bool {
 	return l.level <= level
 }

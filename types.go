@@ -36,6 +36,8 @@ type ILogger interface {
 	LevelHuman(level string) ILogger
 	// Get level
 	GetLevel() Level
+	// Get Param y name
+	GetParam(nae string) (string, error)
 	// Get level as human
 	GetLevelHuman() string
 	// Check the level, will this log be written or not
